@@ -1,0 +1,43 @@
+{
+    "configurations": [
+        {
+            "name": "Input: _test.txt",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "args": [
+                "<",
+                "${input:scriptBasePath}_test.txt"
+            ]
+        },
+        {
+            "name": "Input: _example.txt",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "args": [
+                "<",
+                "${input:scriptBasePath}_example.txt"
+            ]
+        }
+    ],
+
+
+    "inputs": [
+        {
+            "id": "scriptBasePath",
+            "type": "command",
+            "command": "extension.commandvariable.transform",
+            "args": {
+                "text": "${fileDirname}/${fileBasenameNoExtension}",
+                "apply": [
+                    { "find": "a$", "replace": "", "flags": "" }
+                ],
+                "transform": {}
+            }
+        }
+    ]
+}
+
