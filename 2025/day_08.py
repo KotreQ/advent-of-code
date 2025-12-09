@@ -1,7 +1,5 @@
-from collections import defaultdict
-from functools import reduce
-from pprint import pprint
 import sys
+from functools import reduce
 
 
 def dist_sq(b1, b2):
@@ -51,6 +49,7 @@ def main() -> None:
 
     product = reduce(lambda a, b: a * b, sizes[:3])
     print(product)
+
 
 if __name__ == "__main__":
     main()
