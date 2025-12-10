@@ -8,7 +8,7 @@
             "console": "integratedTerminal",
             "args": [
                 "<",
-                "${input:scriptBasePath}_test.txt"
+                "${fileDirname}/${input:adventDayName}_test.txt"
             ]
         },
         {
@@ -19,7 +19,7 @@
             "console": "integratedTerminal",
             "args": [
                 "<",
-                "${input:scriptBasePath}_example.txt"
+                "${fileDirname}/${input:adventDayName}_example.txt"
             ]
         }
     ],
@@ -27,13 +27,13 @@
 
     "inputs": [
         {
-            "id": "scriptBasePath",
+            "id": "adventDayName",
             "type": "command",
             "command": "extension.commandvariable.transform",
             "args": {
-                "text": "${fileDirname}/${fileBasenameNoExtension}",
+                "text": "${fileBasenameNoExtension}",
                 "apply": [
-                    { "find": "a$", "replace": "", "flags": "" }
+                    { "find": "(day_\\d{2}).*$", "replace": "$1", "flags": "" }
                 ],
                 "transform": {}
             }
