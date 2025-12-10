@@ -43,7 +43,7 @@ def bitmasks(n, k):  # bitmask of k 1s in n places
     yield from bitmasks(n - 1, k)
 
 
-def find_bitmask(target, numbers) -> int:
+def find_bitmask(target, numbers) -> tuple[int, int]:
     N = len(numbers)
 
     for bit_count in range(N + 1):
@@ -53,7 +53,7 @@ def find_bitmask(target, numbers) -> int:
                 cur_target ^= numbers[bit_spot] * ((bitmask >> bit_spot) & 1)
 
             if cur_target == 0:
-                return bitmask
+                return bitmask, bit_count
 
 
 def main() -> None:
@@ -71,8 +71,8 @@ def main() -> None:
         lights_bin = get_lights_bin(lights)
         buttons_bin = get_buttons_bin(buttons)
 
-        bitmask = find_bitmask(lights_bin, buttons_bin)
-        result += bitmask.bit_count()
+        bitmask, bit_count = find_bitmask(lights_bin, buttons_bin)
+        result += bit_count
 
     print(result)
 
