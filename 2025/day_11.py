@@ -1,9 +1,12 @@
 import sys
 
 
-def find_paths(graph, start, end, cache={}) -> int:
+def find_paths(graph, start, end, cache=None) -> int:
     if start == end:
         return 1
+
+    if cache is None:
+        cache = {}
 
     if start in cache:
         return cache[start]
