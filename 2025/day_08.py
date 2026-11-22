@@ -1,5 +1,7 @@
-import sys
+from collections import defaultdict
 from functools import reduce
+import sys
+from queue import PriorityQueue
 
 
 def dist_sq(b1, b2):
@@ -9,12 +11,32 @@ def dist_sq(b1, b2):
     return dx**2 + dy**2 + dz**2
 
 
-def find_graph_index(graphs, element):
-    for i, graph in enumerate(graphs):
-        if element in graph:
-            return i
+class UnionFind:
+    def __init__(self, n):
+        self.parent = [i for i in range(n)]
+        self.rank = [0 for _ in range(n)]
 
-    return -1
+    def find(self, a):
+        if self.parent[a] != a:
+            self.parent[a] = self.find(self.parent[a])
+
+        return self.parent[a]
+
+    def union(self, a, b):
+        a = self.find(a)
+        b = self.find(b)
+
+        if a == b:
+            return False
+
+        if self.rank[a] < self.rank[b]:
+            self.parent[a] = b
+        else:
+            self.parent[b] = a
+            if self.rank[a] == self.rank[b]:
+                self.rank[a] += 1
+
+        return True
 
 
 def main() -> None:
@@ -28,27 +50,30 @@ def main() -> None:
 
     N = len(boxes)
 
-    connections = []
+    uf = UnionFind(N)
+    q = PriorityQueue()
     for i in range(N - 1):
+        a = boxes[i]
         for j in range(i + 1, N):
-            connections.append((dist_sq(boxes[i], boxes[j]), i, j))
-    connections.sort()
+            b = boxes[j]
+            q.put((dist_sq(a, b), i, j))
 
-    edges = [(v1, v2) for _, v1, v2 in connections[:CONNECTION_COUNT]]
-    graphs = [set([v]) for v in range(N)]
+    count = 0
+    while count < CONNECTION_COUNT and q.qsize() > 0:
+        _, u, v = q.get()
 
-    for v1, v2 in edges:
-        g1 = find_graph_index(graphs, v1)
-        g2 = find_graph_index(graphs, v2)
+        uf.union(u, v)
+        count += 1
 
-        if g1 != g2:
-            graphs[g1].update(graphs.pop(g2))
+    circuit_sizes = defaultdict(int)
+    for u in range(N):
+        circuit = uf.find(u)
+        circuit_sizes[circuit] += 1
 
-    sizes = [len(graph) for graph in graphs]
-    sizes.sort(reverse=True)
+    sizes = sorted(circuit_sizes.values(), reverse=True)
+    result = reduce(lambda a, b: a*b, sizes[:3])
 
-    product = reduce(lambda a, b: a * b, sizes[:3])
-    print(product)
+    print(result)
 
 
 if __name__ == "__main__":
